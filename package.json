@@ -9,8 +9,14 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
+    "@react-navigation/bottom-tabs": "^6.5.11",
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/native-stack": "^6.9.17",
+    "@react-navigation/stack": "^6.3.20",
     "expo": "~49.0.15",
     "expo-status-bar": "~1.6.0",
+    "firebase": "^10.7.1",
     "react": "18.2.0",
     "react-native": "0.72.6"
   },
