@@ -1,14 +1,16 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons
-import ProfileScreen from './ProfileScreen'; // Import your ProfileScreen component
-import HackatonsScreen from './HackatonsScreen'; // Import your HackatonsScreen component
-import FriendsScreen from './FriendsScreen'; // Import your FriendsScreen component
+import { MaterialIcons } from '@expo/vector-icons';
+import ProfileScreen from './ProfileScreen';
+import HackatonsScreen from './HackatonsScreen';
+import FriendsScreen from './FriendsScreen';
 
 const Tab = createBottomTabNavigator();
 
-const HomeScreen = () => {
+const HomeScreen = ({ route }) => {
+    const user = route.params.user;
+
     return (
         <NavigationContainer independent={true}>
             <Tab.Navigator>

@@ -1,39 +1,23 @@
+// Import necessary components
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Dimensions } from 'react-native';
+import {View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 import {
-    getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     sendPasswordResetEmail,
+    sendEmailVerification,
 } from 'firebase/auth';
 import { GlobalContext } from '../GlobalContext'; // Adjust the path accordingly
-import { CommonActions } from '@react-navigation/native';
+import { app, auth } from '../firebaseConfig';
+import {CommonActions} from "@react-navigation/native";
 
-const auth = getAuth();
 
 const LoginScreen = ({ navigation }) => {
     const { setIsLoggedIn } = useContext(GlobalContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
-    const handleSignUp = () => {
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                console.log('Sign up successful');
-                // Check if the user object and sendEmailVerification function are available
-                if (user && user.sendEmailVerification) {
-                    sendEmailVerification(user);
-                } else {
-                    console.log('Error: User or sendEmailVerification function is undefined.');
-                }
-            })
-            .catch((error) => {
-                console.log(error.message);
-                setError(error.message);
-            });
-    };
 
     const handleSignIn = () => {
         signInWithEmailAndPassword(auth, email, password)
@@ -41,14 +25,31 @@ const LoginScreen = ({ navigation }) => {
                 console.log('Sign in successful');
                 console.log('User data:', userCredential.user);
                 setIsLoggedIn(true); // Set the isLoggedIn state to true on successful sign-in
-                navigation.navigate('Home');
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'Home' }],
+                    })
+                );
             })
             .catch((error) => {
                 console.log(error.message);
                 setError(error.message);
             });
     };
-
+    const handleSignUp = () => {
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log('Sign up successful');
+                // Check if the user object and sendEmailVerification function are available
+                sendEmailVerification(user);
+            })
+            .catch((error) => {
+                console.log(error.message);
+                setError(error.message);
+            });
+    };
     const handleForgotPassword = () => {
         sendPasswordResetEmail(auth, email)
             .then(() => {
@@ -60,36 +61,75 @@ const LoginScreen = ({ navigation }) => {
             });
     };
 
-    const sendEmailVerification = (user) => {
-        user.sendEmailVerification()
-            .then(() => {
-                console.log('Email verification sent');
+/*    const handleSignIn = () => {
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                console.log('Sign in successful');
+                console.log('User data:', userCredential.user);
+                setIsLoggedIn(true); //
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'Home' }],
+                    })
+                );
             })
             .catch((error) => {
                 console.log(error.message);
                 setError(error.message);
             });
+    };*/
+
+    // btn signIn
+    const SignInButton = ({ action }) => {
+        return (
+            <TouchableOpacity style={styles.buttonSignIn} onPress={action}>
+                <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+        );
+    };
+
+    // btn signUp
+    const SignUpButton = ({ action }) => {
+        return (
+            <TouchableOpacity style={styles.buttonSignUp} onPress={action}>
+                <Text style={styles.buttonText}>Create account</Text>
+            </TouchableOpacity>
+        );
+    };
+
+    // btn forgot password
+    const ForgotPasswordButton = ({ action }) => {
+        return (
+            <TouchableOpacity style={styles.buttonForgot} onPress={action}>
+                <Text style={styles.buttonText}>Forgot Password</Text>
+            </TouchableOpacity>
+        );
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.error}>{error}</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
-            <Button title="Sign Up" onPress={handleSignUp} />
-            <Button title="Sign In" onPress={handleSignIn} />
-            <Button title="Forgot Password" onPress={handleForgotPassword} />
+            <KeyboardAvoidingView behavior={'padding'}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    autoCapitalize="none"
+                    secureTextEntry={true}
+                />
+            </KeyboardAvoidingView>
+            <SignInButton action={handleSignIn} />
+            <SignUpButton action={handleSignUp} />
+            <ForgotPasswordButton action={handleForgotPassword} />
         </View>
     );
 };
@@ -111,6 +151,31 @@ const styles = StyleSheet.create({
     error: {
         color: 'red',
         marginBottom: 10,
+    },
+
+    // buttons
+    buttonSignIn: {
+        backgroundColor: 'orange',
+        padding: 10,
+        borderRadius: 5,
+        margin: 10,
+    },
+    buttonSignUp: {
+        backgroundColor: 'green',
+        padding: 10,
+        borderRadius: 5,
+        margin: 10,
+    },
+    buttonForgot: {
+        backgroundColor: 'red',
+        padding: 10,
+        borderRadius: 5,
+        margin: 10,
+    },
+    buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontWeight: 'bold',
     },
 });
 
