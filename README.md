@@ -1,7 +1,7 @@
 ![HACKM8-12-17-2023](https://github.com/scoxfield/HackM8/assets/117548573/a670bc3d-223a-49c8-9313-d59fa9d941f6)
 
 <p align="center">
-  Hackmate is an innovative app created in React Native and Expo go. <br />
+  Hackmate is an innovative app created in React Native and Expo Go. <br />
   It allows users to quickly view all kinds of hackathons available to the general public and sign up for them. <br />
 </p>
 
@@ -20,11 +20,17 @@
 - **Display & Join a Team with Your Friends**: Collaborate with your friends by joining or creating teams for hackathons.
 
 - **Customize Profile/Change Profile Picture**: Personalize your profile by updating information and changing your profile picture.
+
+
 <p align="center">
   <img src="https://github.com/scoxfield/HackM8/assets/117548573/b7c66338-846b-4006-a210-b3fe1542386c" alt="line">
 </p>
-Created in React Native and Expo Go
 
 
+<p align="center">
+  Created by Scoxfield & Wildenza in React Native and Expo Go
+</p>
 
-![ezgif com-video-to-gif-converted](https://github.com/scoxfield/HackM8/assets/117548573/dbe17b26-48df-440c-9fef-5355bc6dcd29)
+<p align="center">
+  <img src="https://github.com/scoxfield/HackM8/assets/117548573/dbe17b26-48df-440c-9fef-5355bc6dcd29" alt="gif">
+</p>
