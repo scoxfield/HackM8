@@ -1,58 +1,68 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { auth, database, storage } from '../firebaseConfig';
+import { ref, get } from '@firebase/database';
+import { getDownloadURL, ref as storageRef } from 'firebase/storage';
 
-const WhiteLine = () => (
-    <View style={styles.whiteLine}></View>
-);
+export default function FriendsScreen() {
+    const [friends, setFriends] = useState([]);
+    const userId = auth.currentUser.uid;
 
-const FriendsScreen = () => {
+    useEffect(() => {
+        const userFriendsRef = ref(database, `Users/${userId}/friends`);
+        get(userFriendsRef).then(snapshot => {
+            if (snapshot.exists()) {
+                const friendsData = snapshot.val();
+                const friendsPromises = Object.keys(friendsData).map(friendId => {
+                    const friendRef = ref(database, `Users/${friendId}`);
+                    return get(friendRef)
+                        .then(friendSnapshot => {
+                            const friendData = friendSnapshot.val();
+                            const profilePicRef = storageRef(storage, friendData.profilePic);
+                            return getDownloadURL(profilePicRef)
+                                .then(profilePicURL => {
+                                    return { id: friendId, email: friendData.email, profilePic: profilePicURL };
+                                })
+                                .catch(error => {
+                                    console.log('Error fetching profile picture:', error);
+                                    // Return the friendId, email, and a default profile picture URL if fetching the profile picture fails
+                                    return { id: friendId, email: friendData.email, profilePic: 'defaultProfilePicURL' };
+                                });
+                        });
+                });
+                Promise.all(friendsPromises).then(friendsDetails => {
+                    setFriends(friendsDetails);
+                });
+            }
+        });
+    }, []);
+
     return (
-        <LinearGradient
-            colors={['orange', 'red']}
-            style={styles.container}
-        >
-            <Image
-                source={require('../assets/blob1.png')}
-                style={styles.backgroundImage}
+        <View style={styles.container}>
+            <FlatList
+                data={friends}
+                keyExtractor={(item) => item.email}
+                renderItem={({ item }) => (
+                    <View style={styles.item}>
+                        <Text>{item.email}</Text>
+                        <Image source={{ uri: item.profilePic }} style={{ width: 50, height: 50 }} />
+                    </View>
+                )}
             />
-            <View style={styles.contentContainer}>
-                <Text>Navem nmimic aici mos craiun si prienteni sai gg</Text>
-            </View>
-        </LinearGradient>
+        </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        backgroundColor: '#fff',
         alignItems: 'center',
-        backgroundColor: 'transparent', // Set the background to transparent
-    },
-    backgroundImage: {
-        flex: 1,
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-    },
-    contentContainer: {
-        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1,
     },
-    whiteLine: {
-        backgroundColor: 'white',
-        height: 2,
-        width: '100%',
-        marginVertical: 10,
+    item: {
+        padding: 10,
+        fontSize: 18,
+        height: 44,
     },
 });
-
-export default FriendsScreen;
