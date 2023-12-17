@@ -26,11 +26,14 @@
   <img src="https://github.com/scoxfield/HackM8/assets/117548573/b7c66338-846b-4006-a210-b3fe1542386c" alt="line">
 </p>
 
-
+[![runs with Expo Go](https://img.shields.io/badge/Runs%20with%20Expo%20Go-000.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000)](https://expo.dev/client)
 <p align="center">
   Created by Scoxfield & Wildenza in React Native and Expo Go
 </p>
 
+
 <p align="center">
   <img src="https://github.com/scoxfield/HackM8/assets/117548573/dbe17b26-48df-440c-9fef-5355bc6dcd29" alt="gif">
 </p>
+
+
