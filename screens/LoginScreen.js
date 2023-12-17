@@ -44,6 +44,7 @@ const LoginScreen = ({ navigation }) => {
                 console.log('Sign up successful');
                 // Check if the user object and sendEmailVerification function are available
                 sendEmailVerification(user);
+                alert('Account created succesfully! Verify your email now.');
             })
             .catch((error) => {
                 console.log(error.message);
@@ -54,6 +55,7 @@ const LoginScreen = ({ navigation }) => {
         sendPasswordResetEmail(auth, email)
             .then(() => {
                 console.log('Password reset email sent');
+                alert('Check your email!');
             })
             .catch((error) => {
                 console.log(error.message);

@@ -8,6 +8,9 @@ import firebase from 'firebase/app';
 import 'firebase/storage';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import {sendPasswordResetEmail} from "firebase/auth";
+import { LinearGradient } from 'expo-linear-gradient';
+import {ImageBackground} from "react-native";
+
 
 const WhiteLine = () => (
     <View style={styles.whiteLine}></View>
@@ -127,7 +130,16 @@ const ProfileScreen = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <LinearGradient
+            colors={['orange', 'red']}
+            style={styles.container}
+        >
+            <View style={styles.backgroundImageContainer}>
+                <Image
+                    source={require('../assets/blob1.png')}
+                    style={styles.backgroundImage}
+                />
+            </View>
             <View style={styles.profilePictureContainer}>
                 <View style={styles.profileImageContainer}>
                     {profileImage && <Image source={{ uri: profileImage }} style={styles.profileImage} />}
@@ -160,7 +172,7 @@ const ProfileScreen = ({ navigation }) => {
                     <Text style={styles.logoutButtonText}>Log Out</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </LinearGradient>
     );
 };
 
@@ -247,19 +259,29 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
     },
-    profileImageContainer: {
-        borderColor: 'white',// Add this line for the outer white border
-        borderWidth: 2,// Add this line for the outer white border
-        borderRadius: 50, // Set the radius to half of the width and height of the profile picture
-        width: 104,           // Set the width to the diameter + borderWidth * 2
-        height: 104,          // Set the height to the diameter + borderWidth * 2
-        padding: 4,// Adjust this value accordingly based on your needs
+    backgroundImage: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+        justifyContent: 'center',
+        top:100,
     },
+    profileImageContainer: {
+        borderColor: 'white',
+        borderWidth: 4,
+        borderRadius: 54,
+        width: 108,
+        height: 108,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 4,
+    },
+
     profileImage: {
         width: 100,
         height: 100,
         borderRadius: 50,
-        marginBottom: 10,
     },
     uploadImageButton: {
         backgroundColor: 'white',
@@ -273,6 +295,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
     },
+    backgroundImageContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+
 });
 
 export default ProfileScreen;
