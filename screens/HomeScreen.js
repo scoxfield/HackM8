@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import ProfileScreen from './ProfileScreen';
 import HackatonsScreen from './HackatonsScreen';
 import FriendsScreen from './FriendsScreen';
+import TeamScreen from "./TeamScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,6 +38,16 @@ const HomeScreen = ({ route }) => {
                 <Tab.Screen
                     name="Friends"
                     component={FriendsScreen}
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialIcons name="group" color={color} size={size} />
+                        ),
+                        headerShown: false,
+                    }}
+                />
+                <Tab.Screen
+                    name="Teams"
+                    component={TeamScreen}
                     options={{
                         tabBarIcon: ({ color, size }) => (
                             <MaterialIcons name="group" color={color} size={size} />

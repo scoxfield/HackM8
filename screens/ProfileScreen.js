@@ -10,6 +10,7 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/
 import {sendPasswordResetEmail} from "firebase/auth";
 import { LinearGradient } from 'expo-linear-gradient';
 import {ImageBackground} from "react-native";
+import { getDatabase, ref as refx, onValue, set, get } from '@firebase/database';
 
 
 const WhiteLine = () => (
@@ -19,7 +20,7 @@ const WhiteLine = () => (
 const ProfileScreen = ({ navigation }) => {
     const [profileImage, setProfileImage] = useState(null);
     const [uploading, setUploading] = useState(false);
-
+    const [hackathonsCount,setHackathonsCount] = useState({});
     // Load the stored image URI when the component mounts
     useEffect(() => {
         const loadProfileImage = async () => {
@@ -33,9 +34,34 @@ const ProfileScreen = ({ navigation }) => {
                 console.error('Error loading profile image:', error);
             }
         };
+        const db = getDatabase();
+        let hackathonCount = 0;
 
+        const checkUserAttendance = (hackathonId) => {
+            const attendanceRef = refx(db, `hackathons/hackathon${hackathonId}/attendees/${auth.currentUser.uid}`);
+            onValue(attendanceRef, (snapshot) => {
+                if (snapshot.exists() && snapshot.val().attending === true) {
+                    hackathonCount++;
+                }
+            });
+        };
+
+        const fetchHackathons = async () => {
+            const hackathonsRef = refx(db, 'hackathons');
+            onValue(hackathonsRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const hackathonList = Object.keys(snapshot.val()).map((key) => snapshot.val()[key]);
+                    hackathonList.forEach(hackathon => checkUserAttendance(hackathon.id))
+                    setHackathonsCount(hackathonCount);
+                }
+            });
+        };
+        fetchHackathons();
+        // Set the hackathon count in your state
+
+        console.log(hackathonCount);
         loadProfileImage();
-    }, [profileImage]);
+    }, [profileImage,hackathonsCount]);
 
     const handleResetPassword = () => {
         const email = auth.currentUser.email;
@@ -159,7 +185,7 @@ const ProfileScreen = ({ navigation }) => {
                 <WhiteLine />
 
                 <View style={styles.SecondContainer}>
-                    <Text style={styles.text}>Hackatons Attended : [0]</Text>
+                    <Text style={styles.text}>Hackatons Attended : [{JSON.stringify(hackathonsCount)}]</Text>
                 </View>
                 <WhiteLine />
 
