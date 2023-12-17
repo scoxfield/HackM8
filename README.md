@@ -28,7 +28,7 @@
 
 [![runs with Expo Go](https://img.shields.io/badge/Runs%20with%20Expo%20Go-000.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000)](https://expo.dev/client)
 <p align="center">
-  Created by Scoxfield & Wildenza in React Native and Expo Go
+  Created by Scoxfield & Wildenza in React Native and Expo Go & used Firebase for the Database ( Users/Hackatons/Teams)
 </p>
 
 
